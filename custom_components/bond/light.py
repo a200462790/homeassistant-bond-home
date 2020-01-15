@@ -20,7 +20,10 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     #     return
 
     # Add devices
-    add_entities(BondLight(bond, deviceId) for deviceId in bond.getDeviceIds())
+    for device_id in bond.getDeviceIds():
+        device_properties = bond.getDevice(device_id)
+        if device_properties['type'] != 'MS':
+            add_entities([BondLight(bond, device_id)])
 
 
 class BondLight(Light):

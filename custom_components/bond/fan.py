@@ -14,7 +14,10 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     bond = hass.data[DOMAIN]['bond_hub']
 
     # Add devices
-    add_entities(BondFan(bond, deviceId) for deviceId in bond.getDeviceIds())
+    for device_id in bond.getDeviceIds():
+        device_properties = bond.getDevice(device_id)
+        if device_properties['type'] != 'MS':
+            add_entities([BondFan(bond, device_id)])
 
 
 class BondFan(FanEntity):
